@@ -33,9 +33,16 @@ Run `kpex.py` passing your KeePass database path, then follow the application pr
 python kpex.py tests/passwords.kdbx
 ```
 
-[![asciicast](https://asciinema.org/a/JBYywRFVT50NGyYi8zBwbcWmE.svg)](https://asciinema.org/a/JBYywRFVT50NGyYi8zBwbcWmE)
-
 >Run `python kpex.py --help` for more usage options.
+
+### Demo
+> Terminal
+>
+> [![asciicast](https://asciinema.org/a/JBYywRFVT50NGyYi8zBwbcWmE.svg)](https://asciinema.org/a/JBYywRFVT50NGyYi8zBwbcWmE)
+
+> Web page (video)
+>
+> [![video](https://bittube.video/static/thumbnails/7c02c862-fffb-48fa-8977-b5bae1f99379.jpg)](https://bittube.video/videos/watch/7c02c862-fffb-48fa-8977-b5bae1f99379)
 
 ## Security Info
 
