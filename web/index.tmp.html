@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/water.css">
+    <script src="/static/twemoji.min.js"></script>
+    <script src="/static/jsencrypt.min.js"></script>
+    <script src="/static/script.js"></script>
+    <style>
+        ul, h1, h2, p {
+            text-align: center;
+        }
+        html, body, ul {
+            padding: 0;
+        }
+        #kp-copy-info {
+            display: none;
+        }
+        .kp-emoji-fire {
+            width: 48px;
+        }
+        .kp-emoji-warn {
+            width: 16px;
+        }
+        body {
+            display: none;
+        }
+    </style>
+    <title>KeePassEX</title>
+</head>
+<body>
+    <h1>KeePassEX <button id="kp-fire" title="Stop server">🔥</button></h1>
+    <h2>{{kp-entry}}</h2>
+    <ul>
+        <button id="kp-copy">Copy password to clipboard </button> <i id="kp-copy-info">Copied!</i>
+    </ul>
+    <ul>
+        <button id="kp-show" title="Expose password if auto-copy fails.">Show password ⚠️ </button>
+        <p></p>
+    </ul>
+    <ul id="kp-pass">
+    </ul>
+</body>
+</html>
