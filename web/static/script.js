@@ -26,7 +26,6 @@
     }
 
     function copy_text2clipboard(text, successful_callback, unsuccessful_callback) {
-        console.log(text);
         if (!navigator.clipboard) {
             fallback_copy_text2clipboard(text, successful_callback, unsuccessful_callback);
             return;
