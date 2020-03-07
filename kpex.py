@@ -41,6 +41,7 @@ def main(args):
 
     try:
         KP = load_database(args.db, password, args.keyfile)
+        del password
     except Exception as err:
         utils.clearConsoleUp(1)
         if not isinstance(err, KeyboardInterrupt):
@@ -63,7 +64,10 @@ def main(args):
             result = cli.launch()[0][1]
             if result == 'Yes':
                 auth_password = entry.title if not args.auth else args.auth
-                expose_entry(entry.title, entry.password, auth_password, args.port, args.ssl)
+                entry_title = entry.title
+                entry_password = entry.password
+                del entry, group, subgroups, KP
+                expose_entry(entry_title, entry_password, auth_password, args.port, args.ssl)
                 nav = False
             else:
                 entry = None
