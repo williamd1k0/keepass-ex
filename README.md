@@ -48,9 +48,12 @@ python kpex.py tests/passwords.kdbx
 
 The server exposes a single entry per execution.
 
-The server requires a HTTP Basic authentication.
->NOTE: The credentials for user and password are the entry title and the password of the database, respectively.
+The server uses HTTP Basic authentication.
+>NOTE: The credentials for password is the entry title (the username is ignored).
 
-The password is exposed to the web page using RSA encryption.
+>Use the option `--auth` to change basic auth password.
 
-The web page has a "fire" button to immediately stop the server.
+The password is exposed to the web page using [jsencrypt](https://github.com/travist/jsencrypt) (RSA) because some devices/browsers does not support self-signed SSL Certificates.
+>Use the flag `--ssl` to enable encrypted connection.
+
+The web page has a <kbd>:fire:</kbd> button to immediately stop the server remotely.

@@ -6,18 +6,18 @@ from sanic import Sanic
 from sanic.response import text, html
 from sanic_httpauth import HTTPBasicAuth
 
-auth = HTTPBasicAuth()
 app = Sanic(configure_logging=False)
+auth = HTTPBasicAuth()
 
 auth_info = {
     'entry': '',
     'entry-password': '',
-    'db_password': '',
+    'auth-password': '',
 }
 
 @auth.verify_password
-def verify_password(entry, db_password):
-    return auth_info['entry'].lower() == entry.lower() and auth_info['db_password'] == db_password
+def verify_password(_, auth_password):
+    return auth_info['auth-password'] == auth_password
 
 @app.route('/')
 @auth.login_required
@@ -41,18 +41,29 @@ async def fire(request):
     return text('')
 
 
-def expose_password(entry, entry_password, db_password, port=8000):
-    auth_info['entry'] = entry
-    auth_info['entry-password'] = entry_password
-    auth_info['db_password'] = db_password
-    app.static('/static', './web/static')
-
+def get_local_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))
-    print('Password for %s is being exposed to http://%s:%s' % (entry, s.getsockname()[0], port))
-    print('Stop the service with ^C (Ctrl+C) or pressing the Fire button on the exposed web page.')
+    ip = s.getsockname()[0]
     s.close()
-    app.run(host='0.0.0.0', port=port, access_log=False)
+    return ip
+
+def expose_entry(entry, entry_password, auth_password, port=8000, use_ssl=True):
+    auth_info['entry'] = entry
+    auth_info['entry-password'] = entry_password
+    auth_info['auth-password'] = auth_password
+
+    ssl = None
+    protocol = 'http'
+    if use_ssl:
+        ssl = {'cert': ".keys/ca.crt", 'key': ".keys/ca.key"}
+        protocol = 'https'
+
+    print('Password for %s is being exposed to %s://%s:%s' % (entry, protocol, get_local_ip(), port))
+    print('Stop the service with ^C (Ctrl+C) or pressing the Fire button on the exposed web page.')
+
+    app.static('/static', './web/static')
+    app.run(host='0.0.0.0', port=port, ssl=ssl, access_log=False, debug=False)
 
 if __name__ == '__main__':
-    expose_password('entry', 'entry-password', 'db-password')
+    expose_entry('entry', 'entry-password', 'password')
