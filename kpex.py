@@ -102,7 +102,7 @@ if __name__ == "__main__":
     arg_parser.add_argument('db', metavar='<database.kdbx>', help='KeePass database file')
     arg_parser.add_argument('-k', '--keyfile', metavar='<master.key>', help='Database keyfile (Optional)')
     arg_parser.add_argument('-p', '--port', type=int, default=8000, metavar='<8000>', help='Port to serve [Default=8000]')
-    arg_parser.add_argument('-s', '--ssl', action="store_true", help='Use an encrypted connection')
+    arg_parser.add_argument('-s', '--ssl', action="store_true", help='Use an encrypted connection (Key and Certificate paths=.keys/ca.key;.keys/ca.crt)')
     arg_parser.add_argument('-a', '--auth', type=str, metavar="<secure-pass>", help='Change basic auth password [Default=entry-title] (No username)')
     args = arg_parser.parse_args()
     main(args)
