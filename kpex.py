@@ -34,10 +34,23 @@ def get_entry_by_title(title, entries):
             return e
 
 def main(args):
-    cli = SlidePrompt([
-        Password('Type the database password: ', **theme.PASSWORD)
-    ])
+    cli = None
+    if args.entry_only:
+        cli = SlidePrompt([
+            Password('Type the %s password: ' % args.db, **theme.PASSWORD)
+        ])
+    else:
+        cli = SlidePrompt([
+            Password('Type the database password: ', **theme.PASSWORD)
+        ])
     password = cli.launch()[0][1]
+
+    if args.entry_only:
+        entry_title = args.db
+        entry_password = password
+        auth_password = entry_title if not args.auth else args.auth
+        expose_entry(entry_title, entry_password, auth_password, args.port, args.ssl)
+        sys.exit(0)
 
     try:
         KP = load_database(args.db, password, args.keyfile)
@@ -102,11 +115,12 @@ def main(args):
                 entry = get_entry_by_title(result, entries)
 
 if __name__ == "__main__":
-    arg_parser = ArgumentParser('KeePassEX', description="WARNING: Do not use your KeePass password for basic auth (-a) if SSL is disabled.")
-    arg_parser.add_argument('db', metavar='<database.kdbx>', help='KeePass database file')
+    arg_parser = ArgumentParser('KeePassEX', description="WARNING: Do not use your KeePass password for basic auth (-a/--auth) if SSL is disabled.")
+    arg_parser.add_argument('db', metavar='<database.kdbx | entry-title>', help='KeePass database file OR the entry title if -e/--entry-only')
     arg_parser.add_argument('-k', '--keyfile', metavar='<master.key>', help='Database keyfile (Optional)')
     arg_parser.add_argument('-p', '--port', type=int, default=8000, metavar='<8000>', help='Port to serve [Default=8000]')
     arg_parser.add_argument('-s', '--ssl', action="store_true", help='Use an encrypted connection (Key and Certificate paths=.keys/ca.key;.keys/ca.crt)')
+    arg_parser.add_argument('-e', '--entry-only', action="store_true", help='Expose a password directly instead of opening a database')
     arg_parser.add_argument('-a', '--auth', type=str, metavar="<secure-pass>", help='Change basic auth password [Default=entry-title] (No username)')
     args = arg_parser.parse_args()
     main(args)
