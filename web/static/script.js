@@ -1,5 +1,5 @@
 (function() {
-    function fallback_copy_text2clipboard(text,  successful_callback, unsuccessful_callback) {
+    function fallback_copy_text2clipboard(text, successful_callback, unsuccessful_callback) {
         var textArea = document.createElement("textarea");
         textArea.value = text;
         textArea.style.position = "fixed";
@@ -39,21 +39,28 @@
         });
     }
 
-    var rsa = new JSEncrypt({default_key_size: 1024});
+    var client_keypair = nacl.box.keyPair();
+    var server_pubkey;
     var password = {};
 
     function fetch_password() {
-        var public_key = rsa.getPublicKey();
+        const message = nacl.util.encodeBase64(client_keypair.publicKey);
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "/pass");
         xhr.addEventListener('load', function(ev) {
-            password.value = rsa.decrypt(xhr.responseText);
+            var data = JSON.parse(xhr.responseText);
+            var nonce = nacl.util.decodeBase64(data.nonce);
+            var ciphertext = nacl.util.decodeBase64(data.ciphertext);
+            var decrypted = nacl.box.open(ciphertext, nonce, server_pubkey, client_keypair.secretKey);
+            var decryptedMessage = nacl.util.encodeUTF8(decrypted);
+            password.value = decryptedMessage;
             document.querySelector('body').style.display = 'block';
         });
-        xhr.send(public_key);
+        xhr.send(message);
     }
 
     window.addEventListener('load', function(ev) {
+        server_pubkey = nacl.util.decodeBase64(document.querySelector('meta[name="kp-server-pubkey"]').content);
         document.getElementById('kp-fire').addEventListener('click', function(ev) {
             password = null;
             document.write('');
