@@ -44,8 +44,14 @@
     var password = {};
 
     function fetch_password() {
-        const key_fingerprint = emoji(nacl.hash(client_keypair.publicKey), 4).join(' ');
-        const message = nacl.util.encodeBase64(client_keypair.publicKey);
+        var key_fingerprint;
+        // For no apparent reason, WiiU is not recognising this function.
+        if (window.emoji === undefined) {
+            key_fingerprint = "[" + nacl.hash(client_keypair.publicKey).slice(0, 4).join(' ') + "]";
+        } else {
+            key_fingerprint = emoji(nacl.hash(client_keypair.publicKey), 4).join(' ');
+        }
+        var message = nacl.util.encodeBase64(client_keypair.publicKey);
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "/pass");
         xhr.addEventListener('load', function(ev) {
@@ -58,7 +64,9 @@
             document.querySelector('body').style.display = 'block';
         });
         xhr.send(message);
-        window.alert("Confirm key fingerprint: " + key_fingerprint);
+        setTimeout(function() {
+            window.alert("Confirm key fingerprint: " + key_fingerprint);
+        }, 500);
     }
 
     window.addEventListener('load', function(ev) {

@@ -38,6 +38,7 @@ async def password(request):
         client_pubkey = PublicKey(request.body, encoder=nacl.encoding.Base64Encoder)
         key_hash = nacl.hash.sha512(client_pubkey._public_key, nacl.encoding.RawEncoder)
         fingerprint = ' '.join(emojihash.emoji(key_hash, 4))
+        fingerprint += " %s" % [i for i in key_hash[:4]]
         cli = Bullet(prompt='Confirm key fingerprint: %s' % fingerprint, choices=['Yes', 'No'], margin=1, pad_right=1, **theme.BULLET)
         result = cli.launch()
         can_exchange_keys = True
