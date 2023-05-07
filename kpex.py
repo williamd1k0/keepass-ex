@@ -48,8 +48,7 @@ def main(args):
     if args.entry_only:
         entry_title = args.db
         entry_password = password
-        auth_password = entry_title if not args.auth else args.auth
-        expose_entry(entry_title, entry_password, auth_password, args.port, args.ssl)
+        expose_entry(entry_title, entry_password, args.port)
         sys.exit(0)
 
     try:
@@ -76,11 +75,10 @@ def main(args):
             ])
             result = cli.launch()[0][1]
             if result == 'Yes':
-                auth_password = entry.title if not args.auth else args.auth
                 entry_title = entry.title
                 entry_password = entry.password
                 del entry, group, subgroups, KP
-                expose_entry(entry_title, entry_password, auth_password, args.port, args.ssl)
+                expose_entry(entry_title, entry_password, args.port)
                 nav = False
             else:
                 entry = None
@@ -119,8 +117,6 @@ if __name__ == "__main__":
     arg_parser.add_argument('db', metavar='<database.kdbx | entry-title>', help='KeePass database file OR the entry title if -e/--entry-only')
     arg_parser.add_argument('-k', '--keyfile', metavar='<master.key>', help='Database keyfile (Optional)')
     arg_parser.add_argument('-p', '--port', type=int, default=8000, metavar='<8000>', help='Port to serve [Default=8000]')
-    arg_parser.add_argument('-s', '--ssl', action="store_true", help='Use an encrypted connection (Key and Certificate paths=.keys/ca.key;.keys/ca.crt)')
     arg_parser.add_argument('-e', '--entry-only', action="store_true", help='Expose a password directly instead of opening a database')
-    arg_parser.add_argument('-a', '--auth', type=str, metavar="<secure-pass>", help='Change basic auth password [Default=entry-title] (No username)')
     args = arg_parser.parse_args()
     main(args)

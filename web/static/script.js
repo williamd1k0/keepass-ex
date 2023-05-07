@@ -44,6 +44,7 @@
     var password = {};
 
     function fetch_password() {
+        const key_fingerprint = emoji(nacl.hash(client_keypair.publicKey), 4).join(' ');
         const message = nacl.util.encodeBase64(client_keypair.publicKey);
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "/pass");
@@ -52,11 +53,12 @@
             var nonce = nacl.util.decodeBase64(data.nonce);
             var ciphertext = nacl.util.decodeBase64(data.ciphertext);
             var decrypted = nacl.box.open(ciphertext, nonce, server_pubkey, client_keypair.secretKey);
-            var decryptedMessage = nacl.util.encodeUTF8(decrypted);
-            password.value = decryptedMessage;
+            var decrypted_message = nacl.util.encodeUTF8(decrypted);
+            password.value = decrypted_message;
             document.querySelector('body').style.display = 'block';
         });
         xhr.send(message);
+        window.alert("Confirm key fingerprint: " + key_fingerprint);
     }
 
     window.addEventListener('load', function(ev) {
