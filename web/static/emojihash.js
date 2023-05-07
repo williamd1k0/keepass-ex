@@ -8,6 +8,9 @@ window.emoji = function(hashedData, size) {
     var result = [];
     for (let i = 0; i < size; i++) {
         var code = hashedData[i].toString(16);
+        while (code.length < 2) {
+            code = '0'+code;
+        }
         result.push(String.fromCodePoint(parseInt("1f4"+code, 16)));
     }
     return result;

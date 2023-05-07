@@ -44,12 +44,11 @@
     var password = {};
 
     function fetch_password() {
-        var key_fingerprint;
+        var key_hash = nacl.hash(client_keypair.publicKey);
+        var key_fingerprint = "[" + key_hash.slice(0, 4).join(' ') + "]";
         // For no apparent reason, WiiU is not recognising this function.
-        if (window.emoji === undefined) {
-            key_fingerprint = "[" + nacl.hash(client_keypair.publicKey).slice(0, 4).join(' ') + "]";
-        } else {
-            key_fingerprint = emoji(nacl.hash(client_keypair.publicKey), 4).join(' ');
+        if (window.emoji !== undefined) {
+            key_fingerprint = emoji(nacl.hash(client_keypair.publicKey), 4).join(' ') + " " + key_fingerprint;
         }
         var message = nacl.util.encodeBase64(client_keypair.publicKey);
         var xhr = new XMLHttpRequest();
