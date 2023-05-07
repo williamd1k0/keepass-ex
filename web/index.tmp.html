@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="kp-server-pubkey" content="{{ kp-server-pubkey }}" />
     <link rel="stylesheet" href="/static/water.css">
     <script src="/static/twemoji.min.js"></script>
-    <script src="/static/jsencrypt.min.js"></script>
+    <script src="/static/nacl-fast.min.js"></script>
+    <script src="/static/nacl-util.min.js"></script>
+    <script src="/static/emojihash.js"></script>
     <script src="/static/script.js"></script>
     <style>
         ul, h1, h2, p {
@@ -31,7 +34,7 @@
 </head>
 <body>
     <h1>KeePassEX <button id="kp-fire" title="Stop server">🔥</button></h1>
-    <h2>{{kp-entry}}</h2>
+    <h2>{{ kp-entry }}</h2>
     <ul>
         <button id="kp-copy">Copy password to clipboard </button> <i id="kp-copy-info">Copied!</i>
     </ul>
